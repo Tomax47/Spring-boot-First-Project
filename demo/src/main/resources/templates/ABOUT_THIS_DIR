@@ -1,0 +1,6 @@
+
+
+
+What's the template dir used for?
+    Here all of the templates of the web applications exist
+    -> for most we will use moustache or EJS

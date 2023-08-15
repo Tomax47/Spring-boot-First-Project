@@ -1,0 +1,9 @@
+
+app:
+  datasource:
+    jdbc-url: jdbc:postgresql://localhost:80/demodb
+    username: postgres
+    password: spring
+    pool-size: 30
+
+

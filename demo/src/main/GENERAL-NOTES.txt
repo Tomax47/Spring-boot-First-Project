@@ -1,0 +1,104 @@
+
+
+
+#TARGET FOLDER :
+    The target folder if ain't appear on the sidebar
+    we simply go to maven, at the right bar, click in <project's name> -> LifeCycle -> install
+
+
+    #2- The demo.jar file is what we can run on the server! <demo-0.0.1-SNAPSHOT.jar>
+        And we can access it using the url : localhost:<port number>/api/v1/person "This will send a get request"
+
+
+     #3- To link a postgreSQL DB with with springFW, we will use something called docker:
+        1- If sm running probs occurred with docker, we do the following :
+
+            1- if the prob is related to the "Daemon" then we run the following command in the dir <c/Program Files/Docker/Docker> -> command : ./DockerCli.exe -SwitchDaemon
+            2- if the prob is "Higher privileges", then we update the wsl.exe, we will find it on the official Microsoft site, we download the .msi file n run it!
+
+
+        2-To download an image for docker, we run the following command -> docker pull postgres:alpine
+            ->We added alpine, cuz it's smaller in size!
+
+        3-To check the downloaded images, we run the command -> docker images
+
+        4-To run docker in postgres instance, we run the following command :
+            docker run --name <name here> -e POSTGRES_PASSWORD=<passwd here> -d -p <port here>:<port again> <the image name. For example=> "postgres:alpine">
+            -> -e : environment variable
+            -> -d : to run it in detached mode
+
+        5-Bashing into the created container :
+            docker exec -it postgres-0 bash
+
+            -> exec : execute
+            -> -it : interactive mode
+            -> postgres-0 : the name we added when running the docker
+            -> bash : here is what we wanna execute, in this case it's the bash
+
+            This command will take us to the inside of the container we created!
+
+        6- The Docker run command must be in the following order so it ain't show any errors :
+
+            docker run --name <name> -e POSTGRES_PASSWORD=<pswd> -d -p<User post>:5432 -e POSTGRES_USERNAME=postgres postgres:alpine
+
+
+        7- The application.properties or the application.yml "which we created instead of the application.properties"
+            is the place where we define all the connection details to our db
+            Yet, we will need to import some dependencies to allow us deal with the db,establish the connections and execute the sql commands we want!
+
+
+        8- About some dependencies :
+
+            1- This one allows us to run a tomCat server, and write some API  's using spring boot MVC  :
+                <dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-web</artifactId>
+                </dependency>
+
+            2- This one allows us to run tests for our web app :
+                <dependency>
+                	<groupId>org.springframework.boot</groupId>
+                	<artifactId>spring-boot-starter-test</artifactId>
+                	<scope>test</scope>
+                </dependency>
+
+            3- A dependency called org.assertj, <atrifactId>assertj-core</artifactId>, which is an assertion library for writing mini tests!
+
+
+        9- Dependencies we will need to work with our PostgreSQL database :
+
+            1- The org.springframework.boot :
+                This one will provide us with an API, which will allow us to write and execute some statments
+                <dependency>
+                	<groupId>org.springframework.boot</groupId>
+                	<artifactId>spring-boot-starter-jdbc</artifactId>
+                </dependency>
+
+            2- org.postgresql :
+                This is for the actual driver!
+                <dependency>
+                	<groupId>org.postgresql</groupId>
+                	<artifactId>postgresql</artifactId>
+                	<scope>runtime</scope>
+                </dependency>
+
+            3- org.flywaydb :
+                This is used for the database migration
+                <dependency>
+                	<groupId>org.flywaydb</groupId>
+                	<artifactId>flyway-core</artifactId>
+                </dependency>
+
+        10- To generate UUID's in the terminal, so we add a person, we will need to install an extension :
+            -> We run the following command > CREATE EXTENSION "uuid-ossp"; > inside the db we created!
+
+            -> To check if it worked, we run the command > SELECT uuid_generate_v4();
+
+            -> To insert a person, we run the following command :
+                INSERT INTO person (id, name) VALUES (uuid_generate_v4(), 'Lucas');
+
+                #MAKE SURE TO INSERT THE NAME INSIDE A SINGLE DOUBLE QUOTES 'name here', and not inside a doubled double quotes "name shouldn't be here"
+
+        11- The pool-size inside the application.yml file is to define the number of connections, the server will accept at once!
+
+        12- Hikari is the recommended datasource which we use for spring boot, as it's reliable and very fast!
